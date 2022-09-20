@@ -17,7 +17,7 @@ const verify=async(req,res,next)=>{
 
 
     } catch (error) {
-        res.status(500).send("??? 😳 🕶 🤏 ???")
+        res.status(500).send(" ??? 😳 🕶 🤏 ??? ")
   
     }   
 
