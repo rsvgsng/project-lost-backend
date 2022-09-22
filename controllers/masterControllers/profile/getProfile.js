@@ -1,0 +1,5 @@
+const getProfile =()=>{
+
+}
+
+return getProfile;

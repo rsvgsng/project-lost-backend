@@ -1,3 +1,4 @@
+// Creating a master account
 const SlaveModel = require('../../models/SlaveModel')
 const bcrypt = require('bcrypt')
 const { validateOptions } = require('../../helpers/validateOptions')

@@ -1,0 +1,6 @@
+const deleteTask = ()=>{
+
+}
+
+
+return deleteTask
