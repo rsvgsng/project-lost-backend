@@ -1,4 +1,4 @@
-const UserModel = require('../models/UserModel')
+const SlaveModel = require('../models/SlaveModel')
 const {validationResult } = require('express-validator');
 const bcrypt  = require('bcrypt')
 const jwt =require('jsonwebtoken')
@@ -13,7 +13,7 @@ const loginUser =async(req,res)=>{
 
         const email = req.body.email;
         const password = req.body.password;
-        const login = await UserModel.find({email:email})
+        const login = await SlaveModel.find({email:email})
 
         if(!login.length<1){
             const hashedPass = login[0].password;

@@ -1,6 +1,6 @@
 require('dotenv').config()
 const jwt = require('jsonwebtoken');
-const UserModel = require('../models/UserModel')
+const SlaveModel = require('../models/SlaveModel')
 
 
 
@@ -11,12 +11,9 @@ const verify=async(req,res,next)=>{
         if(!headerToken)return res.send({msg:"No access token present on the header! "});
 
         const {id} = (jwt.verify(headerToken,process.env.JWTKEY))
-        const userId = await UserModel.findById({_id:id});
+        const userId = await SlaveModel.findById({_id:id});
         if(userId) return next()
         
-
-
-
 
     } catch (error) {
         res.status(500).send(" ??? 😳 🕶 🤏 ??? ")

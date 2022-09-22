@@ -1,4 +1,4 @@
-const UserModel = require('../models/UserModel')
+const SlaveModel = require('../models/SlaveModel')
 const bcrypt = require('bcrypt')
 const { validateOptions } = require('../helpers/validateOptions')
 
@@ -11,7 +11,7 @@ const createUser = async (req, res) => {
 
 
             // User object
-            const user = await new UserModel({
+            const user = await new SlaveModel({
                 fullName: req.body.fullName,
                 email: req.body.email,
                 gender: req.body.gender,
@@ -25,7 +25,7 @@ const createUser = async (req, res) => {
             // Uploading DP logic
             
             // Checking existing email
-            const email = await UserModel.find({email:req.body.email})
+            const email = await SlaveModel.find({email:req.body.email})
             if(!email.length<1) return res.status(401).send({msg:"Email already exists"});
 
 
@@ -47,7 +47,7 @@ const createUser = async (req, res) => {
                         {
                             res.status(500).send({msg:"Something went wrong!"})}
                             else{
-                             await   UserModel.findByIdAndUpdate(_userId, {
+                             await   SlaveModel.findByIdAndUpdate(_userId, {
                                     profilePic: _userId + file.name
                                     
                                 })

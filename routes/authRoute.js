@@ -8,7 +8,9 @@ const verify = require('../middlewares/jwtVerify')
 
 
 
-route.post('/login',body('email').notEmpty().withMessage("Enter email"), body('password').notEmpty().withMessage("Provide your password!"),loginUser);
+route.post('/login/w',body('email').notEmpty().withMessage("Enter email"), body('password').notEmpty().withMessage("Provide your password!"),loginUser);
+// route.post('/login/w',body('email').notEmpty().withMessage("Enter email"), body('password').notEmpty().withMessage("Provide your password!"),loginUser);
+
 route.post('/signup',createUser);
 route.get('/profile',verify,(req,res)=>{res.send("hello")})
 
