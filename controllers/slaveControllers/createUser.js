@@ -1,6 +1,6 @@
-const SlaveModel = require('../models/SlaveModel')
+const SlaveModel = require('../../models/SlaveModel')
 const bcrypt = require('bcrypt')
-const { validateOptions } = require('../helpers/validateOptions')
+const { validateOptions } = require('../../helpers/validateOptions')
 
 const createUser = async (req, res) => {
       try {
@@ -15,7 +15,6 @@ const createUser = async (req, res) => {
                 fullName: req.body.fullName,
                 email: req.body.email,
                 gender: req.body.gender,
-                accountType: req.body.accountType,
                 dob: req.body.dob,
                 location: req.body.location,
                 password: bcrypt.hashSync(req.body.password, 10)
