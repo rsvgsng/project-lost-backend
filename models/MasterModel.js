@@ -16,6 +16,8 @@ const MasterModel = new Schema({
         type: String,
         default: 'default.jpg'
     },
+
+    
     email: {
         type: String,
         required: true,
