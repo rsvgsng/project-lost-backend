@@ -8,11 +8,16 @@ const SlaveModel = new Schema({
         required: true,
 
     },
-
+    userName:{
+        type:String,
+        unique:true,
+        required:true,
+        minlength:5
+    },
     profilePic: {
         type: String,
-        default: 'default.jpg'
-
+        default: 'default.jpg',
+        required:true
     },
     email: {
         type: String,
@@ -80,7 +85,11 @@ const SlaveModel = new Schema({
     documents: [
         {
             docname: String,
-            docuri: String
+            docuri: String,
+            sumbitted:{
+                default:false,
+                type:String
+            }
         }]
 
 })

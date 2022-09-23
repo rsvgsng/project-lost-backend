@@ -2,4 +2,10 @@ const getProfile =()=>{
 
 }
 
-return getProfile;
+const getRecent = ()=>{
+
+}
+
+module.exports = {
+    getProfile,getRecent
+}

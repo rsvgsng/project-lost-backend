@@ -5,7 +5,7 @@ const { validateOptions } = require('../../helpers/validateOptions')
 const createUser = async (req, res) => {
       try {
        
-        const valid = validateOptions(req.body.accountType, req.body.gender, req.body.password, req.body.location)
+        const valid = validateOptions( req.body.gender, req.body.password, req.body.location)
 
         if(!valid) return res.status(500).send({err:"Something is not right!"});
 
@@ -14,20 +14,25 @@ const createUser = async (req, res) => {
             const user = await new SlaveModel({
                 fullName: req.body.fullName,
                 email: req.body.email,
+                userName:req.body.userName,
                 gender: req.body.gender,
+                studyLevel:req.body.studyLevel,
                 dob: req.body.dob,
                 location: req.body.location,
+                canhelpWith:req.body.canhelpWith,
                 password: bcrypt.hashSync(req.body.password, 10)
             })
 
-
-            // Uploading DP logic
-            
             // Checking existing email
             const email = await SlaveModel.find({email:req.body.email})
+            const userName = await SlaveModel.find({userName:req.body.userName})
+            
+            
             if(!email.length<1) return res.status(401).send({msg:"Email already exists"});
+            if(!userName.length<1) return res.status(401).send({msg:"Username already exists"});
+            
 
-
+            if (!req.files) return res.status(500).send({msg:"Please provide a Profile Picture"})
             if (req.files) {
                 
                 if (!req.files.dp.mimetype.startsWith('image/')) 
@@ -40,7 +45,6 @@ const createUser = async (req, res) => {
                  
 
                 file.mv(`Images/${_userId + file.name}`, async () => {
-
                     await user.save(async(err)=>{
                         if(err)
                         {
@@ -63,22 +67,6 @@ const createUser = async (req, res) => {
 
             };
             
-
-            if(!req.files){
-                await user.save((err)=>{
-                    if(err)
-                    {
-                       
-                        res.status(500).send({msg:"Something went wrong!"})}
-                        else{
-                            res.send("ok")
-                        }
-                })
-                
-                
-            }
-    
-
 
         }catch (error) {
             console.log(error)

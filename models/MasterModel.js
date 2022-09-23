@@ -7,11 +7,14 @@ const MasterModel = new Schema({
         type: String,
         required: true,
     },
-
+    userName:{
+        type:String,
+        unique:true,
+        required:true
+    },
     profilePic: {
         type: String,
         default: 'default.jpg'
-
     },
     email: {
         type: String,
@@ -19,8 +22,10 @@ const MasterModel = new Schema({
         unique: true,
         maxlength: 60,
         validate: [validator.isEmail, "Enter valid Email"]
-
     },
+    wantshelpIn:[{
+        type:String
+    }],
     password: {
         type: String,
         required: true,
@@ -29,7 +34,14 @@ const MasterModel = new Schema({
         type: String,
         required: true
     },
+    taskgivenSofar:{
+        type:Number,
 
+    },
+    locations:{
+        required:true,
+        type:String
+    },
     creationDate: {
         type: Date,
         default: Date.now
