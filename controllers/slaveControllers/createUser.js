@@ -60,7 +60,7 @@ const createUser = async (req, res) => {
                         const veriCode = Math.floor(100000 + Math.random() * 900000);
                         var hash = crypto.randomBytes(30).toString('hex');
                         await SlaveModel.findByIdAndUpdate(_userId, {
-                            profilePic: userName + '_dp_.' + fileExtension,
+                            profilePic: userName + '_dp_.' + fileExtension ,
                             tempCode: veriCode,
                             verifyHash:hash
                         })
