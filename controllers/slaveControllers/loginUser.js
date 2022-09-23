@@ -21,7 +21,9 @@ const loginUser =async(req,res)=>{
             if(bcrypt.compareSync(password,hashedPass)){
                 const ID = login;
                 const jwttoken = jwt.sign({id:ID[0]._id},process.env.JWTKEY)
+       
                 res.send({msg:"Login Successful!",success:true,token:jwttoken})
+
             }else{
                 res.status(404).send({msg:"Incorrect password",success:false})
             } 

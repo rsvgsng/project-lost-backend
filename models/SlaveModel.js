@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+
 const validator = require('validator')
 // this model is for slave
 
@@ -8,16 +9,16 @@ const SlaveModel = new Schema({
         required: true,
 
     },
-    userName:{
-        type:String,
-        unique:true,
-        required:true,
-        minlength:5
+    userName: {
+        type: String,
+        unique: true,
+        required: true,
+        minlength: 5
     },
     profilePic: {
         type: String,
         default: 'default.jpg',
-        required:true
+        required: true
     },
     email: {
         type: String,
@@ -28,7 +29,7 @@ const SlaveModel = new Schema({
 
     },
     canhelpWith: [{
-        type:String,
+        type: String,
         required: true
     }],
     password: {
@@ -82,15 +83,32 @@ const SlaveModel = new Schema({
         required: true,
         type: String
     },
-    documents: [
-        {
-            docname: String,
-            docuri: String,
-            sumbitted:{
-                default:false,
-                type:String
+    emailVerified:{
+        type:Boolean,
+        default:false
+    }
+    ,
+    verifyHash:{
+        type:String,
+        default:null
+    },
+    tempCode:{
+        code :Number
+    },
+    documents: {
+
+        submitted: {
+            type:Boolean,
+            default:false
+        },
+        documents: [
+            {
+                docname: String,
+                docuri: String
             }
-        }]
+        ]
+    }
+
 
 })
 
