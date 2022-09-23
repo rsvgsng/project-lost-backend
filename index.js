@@ -8,8 +8,6 @@ const upload = require('express-fileupload')
 //  initialization
 const app = express();
 
-
-
 // middlewares
 app.use(upload())
 app.use(express.json())
