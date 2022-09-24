@@ -1,4 +1,5 @@
 const SlaveModel = require('../../models/SlaveModel')
+const MasterModel = require('../../models/MasterModel')
 const bcrypt = require('bcrypt')
 var crypto = require("crypto");
 const sendVerification = require('../../misc/mails/sendVerification')
@@ -30,7 +31,8 @@ const createUser = async (req, res) => {
         // Checking existing email
         const email = await SlaveModel.find({ email: req.body.email })
         const userName = await SlaveModel.find({ userName: req.body.userName })
-
+        const userMasterEmail = await MasterModel.find({ email: req.body.email })
+        if(userMasterEmail.length>0) return  res.status(401).send({ msg: "Email already exists", code: 401 })
 
         if (!email.length < 1) return res.status(401).send({ msg: "Email already exists", code: 401 });
         if (!userName.length < 1) return res.status(500).send({ msg: "Username already exists", code: 500 });
@@ -64,8 +66,8 @@ const createUser = async (req, res) => {
                             tempCode: veriCode,
                             verifyHash:hash
                         })
-                            console.log(_userId)
-                        sendVerification('ghisingrishav@gmail.com', veriCode,hash,_userId)
+                        
+                        sendVerification('ghisingrishav@gmail.com', veriCode,hash,_userId,'s')
                         res.status(200).send({ msg: "Verification code send. Please check your mail ! It might take couple of minutes to reach to you!" })
                     }
                 })

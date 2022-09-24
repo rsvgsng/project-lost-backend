@@ -40,13 +40,24 @@ const MasterModel = new Schema({
         type:Number,
 
     },
-    locations:{
+    location:{
         required:true,
         type:String
     },
     creationDate: {
         type: Date,
         default: Date.now
+    }, emailVerified:{
+        type:Boolean,
+        default:false
+    }
+    ,
+    verifyHash:{
+        type:String,
+        default:null
+    },
+    tempCode:{
+        code :Number
     },
 
 })

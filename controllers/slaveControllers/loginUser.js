@@ -14,7 +14,8 @@ const loginUser =async(req,res)=>{
         const email = req.body.email;
         const password = req.body.password;
         const login = await SlaveModel.find({email:email})
-
+        console.log(login)
+       if(!login[0].emailVerified)return res.status(404).send({err:"Please verify your email to continue!",success:false})
         if(!login.length<1){
             const hashedPass = login[0].password;
 
@@ -33,7 +34,7 @@ const loginUser =async(req,res)=>{
         }
 
     } catch (error) {
-        res.sendStatus(400)
+        res.status(400).send({msg:"Something went wrong the database is empty!"})
     }
 }
 

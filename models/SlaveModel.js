@@ -46,7 +46,7 @@ const SlaveModel = new Schema({
     },
 
     dob: {
-        type: Number,
+        type: Date,
         required: true
     },
 
