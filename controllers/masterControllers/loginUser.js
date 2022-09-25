@@ -15,7 +15,9 @@ const loginUser =async(req,res)=>{
         const password = req.body.password;
         const login = await MasterModel.find({email:email})
        if(login.length<1) return res.status(404).send({err:"No user found with that email!",success:false})
+
        if(!login[0].emailVerified)return res.status(404).send({err:"Please verify your email to continue!",success:false})
+
             const hashedPass = login[0].password;
             if(bcrypt.compareSync(password,hashedPass)){
                 const ID = login;
@@ -27,8 +29,8 @@ const loginUser =async(req,res)=>{
 
 
     } catch (error) {
-        console.log(error)
-        res.sendStatus(400)
+        res.status(400).send({msg:"Something went wrong the database is empty!"})
+
     }
 }
 

@@ -14,7 +14,6 @@ const createUser = async (req, res) => {
 
         if (!valid) return res.status(500).send({ err: "Something is not right!" });
 
-
         // User object
         const user = await new MasterModel({
             fullName: req.body.fullName,
@@ -32,8 +31,13 @@ const createUser = async (req, res) => {
         // Checking existing email
         const email = await MasterModel.find({ email: req.body.email })
         const userSlaveEmail = await SlaveModel.find({ email: req.body.email })
+
+        const userUserName  = await SlaveModel.find({userName:req.body.userName})
         const userNames = await MasterModel.find({ userName: req.body.userName })
-        if(userSlaveEmail.length>0) return  res.status(401).send({ msg: "Email already exists", code: 401 })
+
+        if(userSlaveEmail.length>0) return  res.status(401).send({ msg: "Email already taken", code: 401 })
+        if (userUserName.length > 0) return res.status(500).send({ msg: "Username is already taken", code: 500 });
+
 
         if (!email.length < 1) return res.status(401).send({ msg: "Email already exists", code: 401 });
         
@@ -53,7 +57,7 @@ const createUser = async (req, res) => {
             const file = req.files.dp
     
 
-            file.mv(`Images/${userName + '_dp_.' + fileExtension}`, async () => {
+            file.mv(`Images/${userName + '_dp.' + fileExtension}`, async () => {
                 await user.save(async (err) => {
                     if (err) {
 

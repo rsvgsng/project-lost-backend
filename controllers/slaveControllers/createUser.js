@@ -3,7 +3,6 @@ const MasterModel = require('../../models/MasterModel')
 const bcrypt = require('bcrypt')
 var crypto = require("crypto");
 const sendVerification = require('../../misc/mails/sendVerification')
-
 const { validateOptions } = require('../../helpers/validateOptions')
 
 const createUser = async (req, res) => {
@@ -28,17 +27,26 @@ const createUser = async (req, res) => {
 
         })
 
-        // Checking existing email
+        // Basic validations
         const email = await SlaveModel.find({ email: req.body.email })
-        const userName = await SlaveModel.find({ userName: req.body.userName })
         const userMasterEmail = await MasterModel.find({ email: req.body.email })
+
+        const masterUsername  = await MasterModel.find({userName:req.body.userName})
+        const userName = await SlaveModel.find({ userName: req.body.userName })
+        console.log(userMasterEmail)
         if(userMasterEmail.length>0) return  res.status(401).send({ msg: "Email already exists", code: 401 })
+        if (masterUsername.length > 0) return res.status(500).send({ msg: "Username is already taken", code: 500 });
+
+
 
         if (!email.length < 1) return res.status(401).send({ msg: "Email already exists", code: 401 });
         if (!userName.length < 1) return res.status(500).send({ msg: "Username already exists", code: 500 });
 
 
         if (!req.files) return res.status(500).send({ msg: "Please provide a Profile Picture", code: 500 })
+
+
+
         if (req.files) {
             const fileExtension = req.files.dp.mimetype.split("/")[1];
 

@@ -1,41 +1,34 @@
+require('dotenv').config()
+const jwt = require('jsonwebtoken');
 const MasterModel = require('../models/MasterModel')
-const {validationResult } = require('express-validator');
-const bcrypt  = require('bcrypt')
-const jwt =require('jsonwebtoken')
 
-const loginUser =async(req,res)=>{
 
+
+const verify=async(req,res,next)=>{
+    
     try {
-        const errors = validationResult(req);
+        const headerToken = req.headers['x-access-token'] || req.headers.authorization.split(' ')[1];
+        if(!headerToken)return res.send({msg:"No access token present on the header! "});
         
-        if (!errors.isEmpty()) {
-          return res.status(400).sendStatus(400);
-        }
-
-        const email = req.body.email;
-        const password = req.body.password;
-        const login = await MasterModel.find({email:email})
-
-        if(!login.length<1){
-            const hashedPass = login[0].password;
-
-            if(bcrypt.compareSync(password,hashedPass)){
-                const ID = login;
-                const jwttoken = jwt.sign({id:ID[0]._id},process.env.JWTKEY)
-       
-                res.send({msg:"Login Successful!",success:true,token:jwttoken})
-
-            }else{
-                res.status(404).send({msg:"Incorrect password",success:false})
-            } 
-            
-        }else{
-            res.status(404).send({err:"No user found with that email!",success:false})
-        }
-
+        const {id} = (jwt.verify(headerToken,process.env.JWTKEY))
+        
+        const userId = await MasterModel.findById({_id:id});
+        
+        if(!userId.emailVerified)return res.status(500).send({msg:"Email not verified!",code:500})
+        
+        req.uid =  userId._id;
+        req.email =  userId.email;
+        next()
+        
     } catch (error) {
-        res.sendStatus(400)
-    }
+        res.status(500).send({msg:"Something went wrong or Invalid JWT"})
+
+    }   
+
+
+
+
+
 }
 
-module.exports = loginUser
+module.exports = verify

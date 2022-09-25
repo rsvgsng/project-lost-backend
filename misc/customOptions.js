@@ -10,7 +10,7 @@ const passwordLength=(password)=>{
 }
 const countriesList=()=>{
 
-return ['NEPAL','INDIA','UNITED STATES',"AUSTRALIA","CANADA","UNITED KINGDOM","GERMANY","POLAND","PAKISTAN","BHUTAN"];
+    return ['NEPAL','INDIA','UNITED STATES',"AUSTRALIA","CANADA","UNITED KINGDOM","GERMANY","POLAND","PAKISTAN","BHUTAN"];
 
 }
 

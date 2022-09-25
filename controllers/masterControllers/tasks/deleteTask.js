@@ -1,6 +1,0 @@
-const deleteTask = ()=>{
-
-}
-
-
-return deleteTask

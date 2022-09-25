@@ -16,7 +16,7 @@ const createUserMaster = require('../controllers/masterControllers/createUser');
 const loginUserMaster = require('../controllers/masterControllers/loginUser');
 const codeVerifyMaster = require('../controllers/masterControllers/verifications/codeVerify');
 const emailVerifyMaster = require('../controllers/masterControllers/verifications/emailVerify');
-
+const getProfile = require('../controllers/masterControllers/profile/getProfile')
 
 // routes for workers
 route.post('/login/w',body('email').notEmpty().withMessage("Enter email"), body('password').notEmpty().withMessage("Provide your password!"),loginUser);
@@ -35,7 +35,7 @@ route.get('/profile/w',verifySlave,(req,res)=>{res.send("hey authorized user")})
 
 // routes for masters
 
-route.get('/profile/m',verifyMaster,(req,res)=>{res.send("hey master user")})
+route.get('/profile/m',verifyMaster,getProfile.getProfile)
 route.post('/signup/m',createUserMaster);
 
 route.post('/login/m',body('email').notEmpty().withMessage("Enter email"), body('password').notEmpty().withMessage("Provide your password!"),loginUserMaster);
@@ -43,6 +43,7 @@ route.post('/login/m',body('email').notEmpty().withMessage("Enter email"), body(
 route.get('/verify/email/m/:hash',emailVerifyMaster)
 
 route.post('/verify/email/m/',codeVerifyMaster)
+
 
 
 

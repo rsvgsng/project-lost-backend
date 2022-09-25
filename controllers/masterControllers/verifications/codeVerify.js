@@ -4,10 +4,10 @@ const codeVerify = async(req,res)=>{
     try {
         const {verifycode,id } =req.body;
    
-        const {tempCode} = await SlaveModel.findById(id);
+        const {tempCode} = await MasterModel.findById(id);
         if(tempCode==verifycode){
    
-            await SlaveModel.findByIdAndUpdate(id,{
+            await MasterModel.findByIdAndUpdate(id,{
                 emailVerified:true,
                 verifyHash:null,
                 tempCode:null
@@ -16,12 +16,10 @@ const codeVerify = async(req,res)=>{
             res.send({msg:"Account verified successfully!"})
 
         }else{
-            
             res.status(400).send({msg:"Invalid code or account is verified already!"})
         }
        
     } catch (error) {
- 
             res.status(500).send({msg:"Something went wrong!"})
     }
 

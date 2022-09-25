@@ -1,8 +1,9 @@
 require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
-const mainRoute = require('./routes/mainRoute')
+const taskRoute = require('./routes/taskRoute')
 const authRoute = require('./routes/authRoute')
+
 const mongoose = require('mongoose');
 const upload = require('express-fileupload')
 //  initialization
@@ -12,7 +13,7 @@ const app = express();
 app.use(upload())
 app.use(express.json())
 app.use(cors());
-app.use("/api/v1/",mainRoute);
+app.use("/api/v1/",taskRoute);
 app.use("/api/v1/",authRoute);
 
 // misc
