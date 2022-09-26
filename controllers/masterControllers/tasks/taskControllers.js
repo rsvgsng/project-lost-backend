@@ -1,13 +1,16 @@
 const taskModel = require('../../../models/taskModel')
 const asynchandler = require('express-async-handler')
 const {randomString} = require('../../../misc/genRandomIDs')
+const {categories} = require('../../../misc/customOptions')
+
 
 
 const newTask =asynchandler(async (req,res)=>{
+
     try {
 
-        const {deadLine,title,des}= req.body;
-
+        const {deadLine,title,des,category}= req.body;
+        const uploadSize = process.env.MAX_UPLOAD
         const newTask =await new taskModel({
             createdBy:req.uid,
             creatorEmail:req.email,
@@ -29,7 +32,13 @@ const newTask =asynchandler(async (req,res)=>{
             let lenghtImages = req.files.images.length==undefined?1:req.files.images.length
 
             if(lenghtImages==1){
-                if(req.files.images.size >= 1000000)  errors.push(`${req.files.images.name}'s exceeds 1MB! `)
+                categoriesArray = category.split(",")
+                for(i = 0 ; i <categoriesArray.length ; i++){
+                    if(!categories().includes(categoriesArray[i].toUpperCase())) return res.status(400).send({msg:`Invalid category '${categoriesArray[i]}'`});
+                }
+                finalCategory = category.split(",").map(e=>{return e.toUpperCase()})
+            
+                if(req.files.images.size >= uploadSize)  errors.push(`${req.files.images.name} is more than ${Math.round(uploadSize/1024/1024)} MB! `)
                 if(!req.files.images.mimetype.startsWith('image/') && !req.files.images.mimetype.startsWith('application/pdf')) errors.push(`${req.files.images.name} is not a supported file! `)
                 let rs = randomString(15)
                 const fileExtension = req.files.images.mimetype.split("/")[1];
@@ -38,20 +47,27 @@ const newTask =asynchandler(async (req,res)=>{
                 req.files.images.mv('files/'+rs+'.'+fileExtension)
 
                 await newTask.save(async()=>{
-                    a = await taskModel.findByIdAndUpdate(id,{
+                    await taskModel.findByIdAndUpdate(id,{
                         $push:{
-                            taskFiles:filenames
+                            taskFiles:filenames,
+                            category:finalCategory
                         }
                      })
-                     console.log(filenames)
+               
                      res.sendStatus(200)
                 })
             }
 
             else{
 
+                categoriesArray = category.split(",")
+                for(i = 0 ; i <categoriesArray.length ; i++){
+                    if(!categories().includes(categoriesArray[i].toUpperCase())) return res.status(400).send({msg:`Invalid category '${categoriesArray[i]}'`});
+                }
+                finalCategory = category.split(",").map(e=>{return e.toUpperCase()})
+            
                 for(i = 0 ; i <lenghtImages ; i++){
-                    if(req.files.images[i].size >= 1000000)  errors.push(`${req.files.images[i].name}'s exceeds 1MB! `)
+                    if(req.files.images[i].size >= uploadSize)  errors.push(`${req.files.images[i].name} is more than ${Math.round(uploadSize/1024/1024)} MB! `)
                     if(!req.files.images[i].mimetype.startsWith('image/')&& !req.files.images[i].mimetype.startsWith('application/pdf')) errors.push(`${req.files.images[i].name} is not a supported file! `)
                 }
                 if(errors.length > 0) return res.status(500).send(errors)
@@ -64,10 +80,12 @@ const newTask =asynchandler(async (req,res)=>{
                     req.files.images[i].mv('files/'+rs+'.'+fileExtension)
                 }
                 
+
                 await newTask.save(async()=>{
-                    a = await taskModel.findByIdAndUpdate(id,{
+                    await taskModel.findByIdAndUpdate(id,{
                         $push:{
-                            taskFiles:filenames
+                            taskFiles:filenames,
+                            category:finalCategory
                         }
                      })
                      res.sendStatus(200)
@@ -78,11 +96,16 @@ const newTask =asynchandler(async (req,res)=>{
        
             }
 
+            
         }
-          
+
+        
+
+        
  
     } 
     catch (error) {
+            console.log(error)
         res.sendStatus(400)
     }
 

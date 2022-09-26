@@ -10,6 +10,7 @@ const validateOptions=(gender,password,country)=>{
 }
 
 
+
 module.exports ={
     validateOptions
 }

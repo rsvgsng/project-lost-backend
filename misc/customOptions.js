@@ -13,8 +13,12 @@ const countriesList=()=>{
     return ['NEPAL','INDIA','UNITED STATES',"AUSTRALIA","CANADA","UNITED KINGDOM","GERMANY","POLAND","PAKISTAN","BHUTAN"];
 
 }
+const categories = ()=>{
 
+    return ['OTHERS','HISTORY',"ELECTRONICS","ACCOUNTS","PROGRAMMING","ECONOMICS","PHYSICS","MATHS"];
 
-module.exports = {accounttypeOptions,gendertypeOptions,passwordLength,countriesList}
+}
 
+module.exports = {accounttypeOptions,gendertypeOptions,passwordLength,countriesList,categories}
 
+// astronomy , english ,maths ,computer science
