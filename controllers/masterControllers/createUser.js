@@ -11,7 +11,7 @@ const createUser = async (req, res) => {
     try {
 
         const valid = validateOptions(req.body.gender, req.body.password, req.body.location)
-
+            console.log(valid)
         if (!valid) return res.status(500).send({ err: "Something is not right!" });
 
         // User object

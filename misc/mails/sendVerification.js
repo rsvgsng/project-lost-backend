@@ -14,6 +14,7 @@ async function sendVerification (to,code,link,userID,cat) {
         if(a.messageId !== undefined) return  {msg:`Mail successfull sent to ${to} hash = ${link}`}
         if(a.messageId == undefined) return  {msg:"Failed"}
     } catch (error) {
+
         return  {msg:"Failed"}
     }
    

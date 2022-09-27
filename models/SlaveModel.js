@@ -49,7 +49,10 @@ const SlaveModel = new Schema({
         type: Date,
         required: true
     },
-
+    balance:{
+        type:Number,
+        default:0
+    },
     creationDate: {
         type: Date,
         default: Date.now

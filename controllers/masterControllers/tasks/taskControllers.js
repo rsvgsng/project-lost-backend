@@ -9,7 +9,7 @@ const newTask =asynchandler(async (req,res)=>{
 
     try {
 
-        const {deadLine,title,des,category}= req.body;
+        const {deadLine,title,des,category,maxPrice}= req.body;
         const uploadSize = process.env.MAX_UPLOAD
         const newTask =await new taskModel({
             createdBy:req.uid,
@@ -17,6 +17,7 @@ const newTask =asynchandler(async (req,res)=>{
             deadLine:deadLine,
             title:title,
             des:des,
+            maxPrice:maxPrice,
             taskID:randomString(13),
         })
         const {_id:id} = newTask;
@@ -45,17 +46,25 @@ const newTask =asynchandler(async (req,res)=>{
                 if(errors.length > 0) return res.status(500).send(errors)
                 filenames.push({fileName:rs,extension:fileExtension})  
                 req.files.images.mv('files/'+rs+'.'+fileExtension)
+       
 
-                await newTask.save(async()=>{
+
+               
+                await newTask.save(async err=>{
+                    if(err) return res.sendStatus (400)
+                 
                     await taskModel.findByIdAndUpdate(id,{
                         $push:{
                             taskFiles:filenames,
                             category:finalCategory
                         }
                      })
-               
-                     res.sendStatus(200)
+
+                  res.sendStatus(200)
                 })
+
+
+
             }
 
             else{
@@ -81,17 +90,23 @@ const newTask =asynchandler(async (req,res)=>{
                 }
                 
 
-                await newTask.save(async()=>{
+
+
+
+                await newTask.save(async err=>{
+          
+                    if(err) return res.sendStatus (400)
+                 
                     await taskModel.findByIdAndUpdate(id,{
                         $push:{
                             taskFiles:filenames,
                             category:finalCategory
                         }
                      })
-                     res.sendStatus(200)
 
-          
+                  res.sendStatus(200)
                 })
+
         
        
             }
@@ -105,7 +120,7 @@ const newTask =asynchandler(async (req,res)=>{
  
     } 
     catch (error) {
-            console.log(error)
+        console.log(error)
         res.sendStatus(400)
     }
 

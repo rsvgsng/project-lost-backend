@@ -1,4 +1,5 @@
 const {Schema, model, Mongoose} = require('mongoose')
+const validator = require('validator')
 
 const taskModel = new Schema({
     createdBy:{
@@ -14,12 +15,20 @@ const taskModel = new Schema({
         required:true,
 
     },
+    taskExpired:{
+        type:Boolean,
+        default:false
+    }
+    ,
     category:[
             {
                 type:String,
-           
             }
     ],
+    maxPrice:{
+        type:Number,
+        required:true
+    },
     des:{
         type:String,
         required:true
