@@ -6,46 +6,60 @@ const taskModel = new Schema({
         type:String,
         required:true
     },
+    
     deadLine:{
         type:Date,
         required:true
     },
+    
     title:{
         type:String,
         required:true,
 
     },
+    
+    assignedTo:{
+        type:String,
+        default:null
+    },
+
     taskExpired:{
         type:Boolean,
         default:false
-    }
-    ,
+    },
+
     category:[
             {
                 type:String,
             }
     ],
+    
     maxPrice:{
         type:Number,
         required:true
     },
+    
     des:{
         type:String,
         required:true
     },
+    
     taskViews:{
         type:Number,
         default:0
     },
+    
     taskID:{
         type:String,
         required:true,
         unique:true
     },
+    
     creatorEmail:{
         type:String,
         default:"null@null.com"
     },
+    
     createdOn:{
         type:Date,
         default:Date.now

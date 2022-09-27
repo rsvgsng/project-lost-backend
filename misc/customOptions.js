@@ -18,11 +18,8 @@ const categories = ()=>{
     return [
     'OTHERS','HISTORY',"ELECTRONICS","ACCOUNTS","PROGRAMMING",
     "ECONOMICS","PHYSICS","MATHS","COMPUTER SCIENCE","ASTRONOMY",
-    
      ];
 
 }
-// JOURNALISM,LAW,ENVIRONMENT SCIENCES,PSYCHOLOGY
 module.exports = {accounttypeOptions,gendertypeOptions,passwordLength,countriesList,categories}
 
-// astronomy , english ,maths ,computer science

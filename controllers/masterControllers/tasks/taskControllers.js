@@ -26,14 +26,17 @@ const newTask =asynchandler(async (req,res)=>{
 
         if(req.files){
       
-           
+
             let errors =[];
             let filenames = []; 
-             
+           
             let lenghtImages = req.files.images.length==undefined?1:req.files.images.length
+            if(lenghtImages>15) return res.send({msg:"max 15 are files allowed!"})
+      
 
             if(lenghtImages==1){
                 categoriesArray = category.split(",")
+
                 for(i = 0 ; i <categoriesArray.length ; i++){
                     if(!categories().includes(categoriesArray[i].toUpperCase())) return res.status(400).send({msg:`Invalid category '${categoriesArray[i]}'`});
                 }
@@ -110,9 +113,9 @@ const newTask =asynchandler(async (req,res)=>{
         
        
             }
-
             
         }
+        // Run this block if no image is uploaded
 
         
 

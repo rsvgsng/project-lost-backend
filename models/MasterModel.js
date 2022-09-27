@@ -51,7 +51,8 @@ const MasterModel = new Schema({
     creationDate: {
         type: Date,
         default: Date.now
-    }, emailVerified:{
+    }, 
+    emailVerified:{
         type:Boolean,
         default:false
     }
