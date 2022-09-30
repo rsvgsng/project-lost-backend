@@ -4,9 +4,8 @@ const verify = require('../middlewares/jtwVerifyMaster')
 
 
 
-
 // task operations
-route.post('/task/new',verify,taskControllers.newTask)
+route.post('/task/m/new',verify,taskControllers.newTask)
 
 
 
@@ -14,8 +13,9 @@ route.post('/task/new',verify,taskControllers.newTask)
 
 // master Task Routes
 
-route.get('/task/edit/:id',verify,taskControllers.editTask)
-route.get('/task/view/:id',verify,taskControllers.getTask)
+route.post('/task/m/edit/:id',verify,taskControllers.editTask)
+route.get('/task/m/view/:id',verify,taskControllers.getTask)
+route.delete('/task/m/delete/:id',verify,taskControllers.deleteTask)
 
 
 module.exports = route;

@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const taskRoute = require('./routes/taskRoute')
 const authRoute = require('./routes/authRoute')
-
+const profileRoute = require('./routes/profileRoutes')
 const mongoose = require('mongoose');
 const upload = require('express-fileupload')
 //  initialization
@@ -15,6 +15,7 @@ app.use(express.json())
 app.use(cors());
 app.use("/api/v1/",taskRoute);
 app.use("/api/v1/",authRoute);
+app.use("/api/v1/",profileRoute);
 
 // misc
 app.all('*',(req,res)=>{res.status(500).send('Internal server error')})

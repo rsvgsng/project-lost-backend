@@ -11,13 +11,7 @@ const MasterModel = new Schema({
         type:String,
         unique:true,
         required:true
-    },
-    profilePic: {
-        type: String,
-        default: 'default.jpg'
-    },
-
-    
+    }    ,
     email: {
         type: String,
         required: true,

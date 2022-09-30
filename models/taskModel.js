@@ -46,7 +46,7 @@ const taskModel = new Schema({
     
     taskViews:{
         type:Number,
-        default:0
+        default:1
     },
     
     taskID:{

@@ -18,7 +18,8 @@ const emailVerify = async (req, res) => {
          await SlaveModel.findOneAndUpdate({ _id: userID.trim() },{
             emailVerified:true,
             verifyHash:null,
-            tempCode:null
+            tempCode:null,
+            veryStep:1
          })
 
          res.send("Account verified successfully")

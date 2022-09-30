@@ -11,7 +11,7 @@ const createUser = async (req, res) => {
     try {
 
         const valid = validateOptions(req.body.gender, req.body.password, req.body.location)
-            console.log(valid)
+       
         if (!valid) return res.status(500).send({ err: "Something is not right!" });
 
         // User object
@@ -42,71 +42,28 @@ const createUser = async (req, res) => {
         if (!email.length < 1) return res.status(401).send({ msg: "Email already exists", code: 401 });
         
         if (!userNames.length < 1) return res.status(500).send({ msg: "Username already exists", code: 500 });
-        const { userName: userName, _id: _userId } = user;
+        const {  _id: _userId } = user;
         
-
-        if (req.files) {
-            const fileExtension = req.files.dp.mimetype.split("/")[1];
-
-
-            if (!req.files.dp.mimetype.startsWith('image/'))
-                return res.status(500).json({ message: 'Please choose an image', code: 500 });
-            if (req.files.dp.size >= 1000000)
-                return res.status(500).json({ message: 'File sized exceed 1 MB', code: 500 });
-
-            const file = req.files.dp
-    
-
-            file.mv(`Images/${userName + '_dp.' + fileExtension}`, async () => {
-                await user.save(async (err) => {
-                    if (err) {
-
-                        res.status(500).send({ msg: "Something went wrong!", code: 500 })
-                    }
-                    else {
-                        const veriCode = Math.floor(100000 + Math.random() * 900000);
-                        var hash = crypto.randomBytes(30).toString('hex');
-                        await MasterModel.findByIdAndUpdate(_userId, {
-                            profilePic: userName + '_dp_.' + fileExtension ,
-                            tempCode: veriCode,
-                            verifyHash:hash
-                        })
-                        
-                        sendVerification(req.body.email, veriCode,hash,_userId,'m')
-                        res.status(200).send({ msg: "Verification code send. Please check your mail ! It might take couple of minutes to reach to you!" })
-                    }
+        await user.save(async (err) => {
+            if (err) {
+                console.log(err)
+                res.status(500).send({ msg: "Something went wrong!", code: 500 })
+            }
+            else {
+                const veriCode = Math.floor(100000 + Math.random() * 900000);
+                var hash = crypto.randomBytes(30).toString('hex');
+                await MasterModel.findByIdAndUpdate(_userId, {
+                    tempCode: veriCode,
+                    verifyHash:hash
                 })
-
-
-            })
-
-
-        }else{
-
-            await user.save(async (err) => {
-                if (err) {
-                    res.status(500).send({ msg: "Something went wrong!", code: 500 })
-                }
-                else {
-                    const veriCode = Math.floor(100000 + Math.random() * 900000);
-                    var hash = crypto.randomBytes(30).toString('hex');
-                    await MasterModel.findByIdAndUpdate(_userId, {
-                        tempCode: veriCode,
-                        verifyHash:hash
-                    })
-                    sendVerification(req.body.email, veriCode,hash,_userId,'m')
-                    res.status(200).send({ msg: "Your should receive a Email with your activation code and a link shortly." })
-                }
-            })
-
-
-        }
-
-
+                sendVerification(req.body.email, veriCode,hash,_userId,'m')
+                res.status(200).send({ msg: "Your should receive a Email with your activation code and a link shortly." })
+            }
+        })
 
 
     } catch (error) {
-        console.log(error)
+        
         res.status(500).send({ msg: "Something went wrong!", code: 500 })
     }
 

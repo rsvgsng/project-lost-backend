@@ -44,10 +44,14 @@ const SlaveModel = new Schema({
         type: String,
         required: true
     },
-
+    veryStep:{
+        type:Number,
+        default:0,
+        max:3
+    },
     dob: {
-        type: Date,
-        required: true
+        type: Date
+
     },
     balance:{
         type:Number,
@@ -83,7 +87,7 @@ const SlaveModel = new Schema({
         type: String
     },
     studyLevel: {
-        required: true,
+     
         type: String
     },
     emailVerified:{

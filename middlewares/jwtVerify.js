@@ -11,8 +11,12 @@ const verify=async(req,res,next)=>{
         if(!headerToken)return res.send({msg:"No access token present on the header! "});
         
         const {id} = (jwt.verify(headerToken,process.env.JWTKEY))
+
         const userId = await SlaveModel.findById({_id:id});
+
         if(!userId.emailVerified)return res.status(500).send({msg:"Email not verified!",code:500})
+        req.uid =  userId._id;
+        req.email =  userId.email;
         if(userId) return next()
         
     } catch (error) {

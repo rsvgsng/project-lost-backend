@@ -12,7 +12,8 @@ const codeVerify = async(req,res)=>{
             await SlaveModel.findByIdAndUpdate(id,{
                 emailVerified:true,
                 verifyHash:null,
-                tempCode:null
+                tempCode:null,
+                veryStep:1
              })
     
             res.send({msg:"Account verified successfully!"})

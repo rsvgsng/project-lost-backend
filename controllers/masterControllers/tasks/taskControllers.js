@@ -138,7 +138,7 @@ const newTask =asynchandler(async (req,res)=>{
 
 
 
-// Edit Task 
+// Update Task 
 
 const editTask = asynchandler(async(req,res)=>{
 try {
@@ -178,16 +178,17 @@ try {
 
 // Get a task detail
 
-
-const getTask = asynchandler(async (req,res)=>{
-
-    
+const getTask = asynchandler(async (req,res)=>{    
 await  taskModel.findById(req.params.id).select("-taskExpired -__v -taskFiles -assignedTo -creatorEmail").then(async e=>{
-
 
         if(e.assignedTo) return res.status(500).send({msg:"This task is already assigned to somebody!"});
         if(e.taskExpired) return res.status(500).send({msg:"This task is expired! "});
-
+        const views = e.taskViews
+        await taskModel.findByIdAndUpdate(req.params.id,{
+            $set:{
+                taskViews:views+1
+            }
+        })
         res.send(e)
 
 
@@ -196,10 +197,37 @@ await  taskModel.findById(req.params.id).select("-taskExpired -__v -taskFiles -a
 
 })
 
+
+
+
+// Delete a task before it is assigned 
+const deleteTask =asynchandler( async(req,res)=>{
+
+    await taskModel.findById(req.params.id).then(async e=>{
+        if(e.assignedTo) return res.status(500).send({msg:"Action failed ! This task is already assigned to somebody ! ",code:500})
+
+        await taskModel.findByIdAndDelete(req.params.id).then(e=>{
+            res.status(200).send({msg:"Task deleted succesfully!"})
+        })
+    })
+    
+    
+    .catch(err=>res.status(500).send({msg:"Something went wrong or post not found!",code:500}))
+    
+    // await taskModel.findByIdAndDelete(req.params.id).then(e=>res.send(e))
+
+
+
+})
+
+
+
 module.exports = {
     newTask,
     editTask,
-    getTask
+    getTask,
+    deleteTask
+
 }
 
 
