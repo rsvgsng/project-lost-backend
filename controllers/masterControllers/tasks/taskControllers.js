@@ -2,8 +2,12 @@ const taskModel = require('../../../models/taskModel')
 const asynchandler = require('express-async-handler')
 const {randomString} = require('../../../misc/genRandomIDs')
 const {categories} = require('../../../misc/customOptions')
+const validateTaskOwner = require('../../../helpers/validateTaskOwner')
 
 
+
+
+// Creating Task
 
 const newTask =asynchandler(async (req,res)=>{
 
@@ -131,8 +135,71 @@ const newTask =asynchandler(async (req,res)=>{
 
 
 
+
+
+
+// Edit Task 
+
+const editTask = asynchandler(async(req,res)=>{
+try {
+    
+    const {title,deadLine,maxPrice} = req.body;
+    
+    
+    await validateTaskOwner(req.params.id,req.uid).then(async e=>{ 
+
+        if(Object.keys(req.body).length<1) return res.send({msg:"Noting to update !"})
+        if(e.length<1) return res.status(404).send({msg:"No task found with that id!"})
+        e= e[0];
+        if(e.assignedTo) return res.send({msg:"This task is already assigned to someone and can't be edited!"}) 
+         await taskModel.findByIdAndUpdate(req.params.id,{
+            $set:{
+                title:title,
+                deadLine:deadLine,
+                maxPrice:maxPrice
+            }
+        }).then(e=>res.send({msg:"Task Updated Successfully!"})).catch(e=>res.send("Something went wrong"))
+
+
+ })
+
+
+} catch (error) {
+
+    return res.status(400).send({msg:"something went wrong!"})
+}
+
+
+
+})
+
+
+
+
+// Get a task detail
+
+
+const getTask = asynchandler(async (req,res)=>{
+
+    
+await  taskModel.findById(req.params.id).select("-taskExpired -__v -taskFiles -assignedTo -creatorEmail").then(async e=>{
+
+
+        if(e.assignedTo) return res.status(500).send({msg:"This task is already assigned to somebody!"});
+        if(e.taskExpired) return res.status(500).send({msg:"This task is expired! "});
+
+        res.send(e)
+
+
+}).catch(rr=>res.send({msg:"Task not found or something went wrong!"}))
+
+
+})
+
 module.exports = {
-    newTask
+    newTask,
+    editTask,
+    getTask
 }
 
 

@@ -10,4 +10,12 @@ route.post('/task/new',verify,taskControllers.newTask)
 
 
 
+
+
+// master Task Routes
+
+route.get('/task/edit/:id',verify,taskControllers.editTask)
+route.get('/task/view/:id',verify,taskControllers.getTask)
+
+
 module.exports = route;
