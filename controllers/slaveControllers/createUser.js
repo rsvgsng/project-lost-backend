@@ -5,8 +5,10 @@ var crypto = require("crypto");
 const sendVerification = require('../../misc/mails/sendVerification')
 const { validateOptions } = require('../../helpers/validateOptions');
 const AsyncHandler = require('express-async-handler');
+const axios = require('axios').default;
+var FormData = require('form-data');
 
-const createUser =AsyncHandler ( async (req, res) => {
+const createUser = AsyncHandler(async (req, res) => {
     try {
 
         const valid = validateOptions(req.body.gender, req.body.password, req.body.location)
@@ -14,7 +16,7 @@ const createUser =AsyncHandler ( async (req, res) => {
 
         // User object
 
-      const user =    await new SlaveModel({
+        const user = await new SlaveModel({
             fullName: req.body.fullName,
             email: req.body.email,
             userName: req.body.userName,
@@ -28,10 +30,10 @@ const createUser =AsyncHandler ( async (req, res) => {
         const email = await SlaveModel.find({ email: req.body.email })
         const userMasterEmail = await MasterModel.find({ email: req.body.email })
 
-        const masterUsername  = await MasterModel.find({userName:req.body.userName})
+        const masterUsername = await MasterModel.find({ userName: req.body.userName })
         const userName = await SlaveModel.find({ userName: req.body.userName })
         console.log(userMasterEmail)
-        if(userMasterEmail.length>0) return  res.status(401).send({ msg: "Email already exists", code: 401 })
+        if (userMasterEmail.length > 0) return res.status(401).send({ msg: "Email already exists", code: 401 })
         if (masterUsername.length > 0) return res.status(500).send({ msg: "Username is already taken", code: 500 });
 
 
@@ -55,16 +57,14 @@ const createUser =AsyncHandler ( async (req, res) => {
                 await SlaveModel.findByIdAndUpdate(_userId, {
                     // profilePic: userName + '_dp_.' + fileExtension ,
                     tempCode: veriCode,
-                    verifyHash:hash.at
+                    verifyHash: hash
                 })
-                
-                sendVerification('ghisingrishav@gmail.com', veriCode,hash,_userId,'s')
+
+                sendVerification('ghisingrishav@gmail.com', veriCode, hash, _userId, 's')
+                console.log(`http://localhost:8000/api/v1/verify/email/${'w'}/${hash}&${_userId}`)
                 res.status(200).send({ msg: "Verification code send. Please check your mail ! It might take couple of minutes to reach to you!" })
             }
         })
-
-
-
 
 
         // if (req.files) {
@@ -80,9 +80,9 @@ const createUser =AsyncHandler ( async (req, res) => {
         //     const { userName: userName, _id: _userId } = user;
 
 
-            // file.mv(`Images/${userName + '_dp_.' + fileExtension}`, async () => {
+        // file.mv(`Images/${userName + '_dp_.' + fileExtension}`, async () => {
 
-            // })
+        // })
 
 
         // };
@@ -95,11 +95,72 @@ const createUser =AsyncHandler ( async (req, res) => {
 
 })
 
-const stepTwoSignup =AsyncHandler(async (req,res)=>{
 
-    const {} = req.body;
+
+
+const stepTwoSignup = AsyncHandler(async (req, res) => {
+    const { about, canhelpWith, studyLevel, documents } = req.body;
+    if (!about, !studyLevel) return res.status(400).send({ msg: "Please fill all the necessary fields." })
+    await SlaveModel.findById(req.uid).then(async e => {
+        if (e.veryStep == 'none') return res.status(400).send({ msg: "You have already completed this step.", code: 400 });
+        // changing the documents into arrasys
+
+
+        if(!req.files) return res.status(400).send({ msg: "Please provide all the necessary documents.", code: 400 });
+
+        if (req.files) {
+            var fileStore = []; 
+            console.log(req.files.file) 
+                
+
+            // var form = new FormData();
+
+            // form.append("file",req.files.documents.data)
+
+            
+
+
+            // fileLength = (req.files.documents.length == undefined ? 1 : req.files.documents.length)
+
+            // if (fileLength > 1) {
+
+            //     for (i = 0; i < fileLength; i++) {
+                    
+            //         console.log(req.files.documents[i].name)
+
+            //     }
+
+            // }
+            // else {
+            //     console.log(req.files.documents.name)
+            // }
+
+
+        }
+
+        // console.log(documents.split(","))
+
+
+
+        // await SlaveModel.findByIdAndUpdate(req.uid, {
+        //     $set: {
+        //         about: about,
+        //         canhelpWith: ['maths', 'Science', "Physics"],
+        //         studyLevel: studyLevel,
+        //         documents: [{
+        //             docUri: "pornhub.com/geda.zip"
+        //         }]
+
+        //     }
+        // }).then(e => res.status(200).send({ msg: "Profile updated successfully!" }))
+
+    })
+
+
+
+
 })
-module.exports = {createUser,stepTwoSignup}
+module.exports = { createUser, stepTwoSignup }
 
 
 

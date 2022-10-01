@@ -10,9 +10,11 @@ async function sendVerification (to,code,link,userID,cat) {
             text: "Thanks for signning up!", // plain text body
             html: `<b>The code to activate your account is ${code}</b> \n Use this link to verify account directly. <a href ="http://localhost:8000/api/v1/verify/email/${cat}/${link}&${userID}" >Link</a>`,
         })
-
+        
+        
         if(a.messageId !== undefined) return  {msg:`Mail successfull sent to ${to} hash = ${link}`}
-        if(a.messageId == undefined) return  {msg:"Failed"}
+        if(a.messageId == undefined) return  {msg:`Failed`}
+        
     } catch (error) {
 
         return  {msg:"Failed"}

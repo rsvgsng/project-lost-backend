@@ -16,9 +16,7 @@ const SlaveModel = new Schema({
         minlength: 5
     },
     profilePic: {
-        type: String,
-        default: 'default.jpg',
-        required: true
+        type: String
     },
     email: {
         type: String,
@@ -28,14 +26,14 @@ const SlaveModel = new Schema({
         validate: [validator.isEmail, "Enter valid Email"]
 
     },
-    canhelpWith: [{
-        type: String,
-        required: true
-    }],
     password: {
         type: String,
         required: true,
     },
+    canhelpWith: [{
+        type: String,
+        required: true
+    }],
     successRate: {
         type: Number,
         default: 0
@@ -45,14 +43,17 @@ const SlaveModel = new Schema({
         required: true
     },
     veryStep:{
-        type:Number,
-        default:0,
-        max:3
+        type:String,
+        default:"first"
+    
     },
     dob: {
         type: Date
 
     },
+    about:{
+        type:String
+        },
     balance:{
         type:Number,
         default:0
@@ -102,19 +103,13 @@ const SlaveModel = new Schema({
     tempCode:{
         code :Number
     },
-    documents: {
 
-        submitted: {
-            type:Boolean,
-            default:false
-        },
         documents: [
             {
-                docname: String,
-                docuri: String
+                docUri: String
             }
         ]
-    }
+
 
 
 })

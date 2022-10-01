@@ -13,14 +13,14 @@ const codeVerify = async(req,res)=>{
                 emailVerified:true,
                 verifyHash:null,
                 tempCode:null,
-                veryStep:1
+                veryStep:"second"
              })
     
-            res.send({msg:"Account verified successfully!"})
+            res.send({msg:"Account verified successfully!",step:"second"})
 
         }else{
             
-            res.status(400).send({msg:"Invalid code or account is verified already!"})
+            res.status(400).send({msg:"Invalid code or account is verified already!",token:jwt.sign({id:id},process.env.JWTKEY)})
         }
        
     } catch (error) {

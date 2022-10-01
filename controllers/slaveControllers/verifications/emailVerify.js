@@ -1,4 +1,5 @@
 const SlaveModel = require('../../../models/SlaveModel')
+const jwt =require('jsonwebtoken')
 
 const emailVerify = async (req, res) => {
     const hash = req.params.hash.split("&");
@@ -19,13 +20,14 @@ const emailVerify = async (req, res) => {
             emailVerified:true,
             verifyHash:null,
             tempCode:null,
-            veryStep:1
+            veryStep:"second"
          })
 
-         res.send("Account verified successfully")
+         res.send({msg:"Account verified successfully!",step:"second",token:jwt.sign({id:userID},process.env.JWTKEY)})
+
     }
     catch (error) {
-       
+        console.log(error)
         res.send("Link is either expired or invalid");
 
     }
