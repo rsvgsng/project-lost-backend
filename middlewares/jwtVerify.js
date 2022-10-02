@@ -17,6 +17,7 @@ const verify=async(req,res,next)=>{
         if(!userId.emailVerified)return res.status(500).send({msg:"Email not verified!",code:500})
         req.uid =  userId._id;
         req.email =  userId.email;
+        
         if(userId) return next()
         
     } catch (error) {
