@@ -5,8 +5,7 @@ var crypto = require("crypto");
 const sendVerification = require('../../misc/mails/sendVerification')
 const { validateOptions } = require('../../helpers/validateOptions');
 const AsyncHandler = require('express-async-handler');
-const axios = require('axios').default;
-var FormData = require('form-data');
+const customOptions = require('../../misc/customOptions');
 
 const createUser = AsyncHandler(async (req, res) => {
     try {
@@ -99,62 +98,65 @@ const createUser = AsyncHandler(async (req, res) => {
 
 
 const stepTwoSignup = AsyncHandler(async (req, res) => {
+
     const { about, canhelpWith, studyLevel, documents } = req.body;
     if (!about, !studyLevel) return res.status(400).send({ msg: "Please fill all the necessary fields." })
+    if (!req.files) return res.status(400).send({ msg: "Please provide your documents." })
+    cateHelp = req.body.canhelpWith.split(',');
+
+    cateHelp.map(e => {
+        if (!customOptions.categories().includes(e.toUpperCase())) return res.status(404).send({ msg: "Invalid category" })
+    })
+
+
     await SlaveModel.findById(req.uid).then(async e => {
+
         if (e.veryStep == 'none') return res.status(400).send({ msg: "You have already completed this step.", code: 400 });
-        // changing the documents into arrasys
 
 
-        if(!req.files) return res.status(400).send({ msg: "Please provide all the necessary documents.", code: 400 });
-        res.send("hi")
-
-        if (req.files) {
-            var fileStore = []; 
-            console.log(req.files.file) 
-                
-            // var form = new FormData();
-
-            // form.append("file",req.files.documents.data)
-
-            
 
 
-            // fileLength = (req.files.documents.length == undefined ? 1 : req.files.documents.length)
+        var fileStore = [];
 
-            // if (fileLength > 1) {
 
-            //     for (i = 0; i < fileLength; i++) {
-                    
-            //         console.log(req.files.documents[i].name)
 
-            //     }
 
-            // }
-            // else {
-            //     console.log(req.files.documents.name)
-            // }
 
+        fileLength = (req.files.documents.length == undefined ? 1 : req.files.documents.length)
+
+        if (fileLength > 1) {
+
+            for (i = 0; i < fileLength; i++) {
+
+                console.log(req.files.documents[i].name)
+
+            }
 
         }
+        else {
+            console.log(req.files.documents.name)
+        }
 
-        // console.log(documents.split(","))
-
-
-
-        // await SlaveModel.findByIdAndUpdate(req.uid, {
-        //     $set: {
-        //         about: about,
-        //         canhelpWith: ['maths', 'Science', "Physics"],
-        //         studyLevel: studyLevel,
-        //         documents: [{
-        //             docUri: "pornhub.com/geda.zip"
-        //         }]
-
-        //     }
-        // }).then(e => res.status(200).send({ msg: "Profile updated successfully!" }))
 
     })
+
+    //     // console.log(documents.split(","))
+
+
+
+    //     // await SlaveModel.findByIdAndUpdate(req.uid, {
+    //     //     $set: {
+    //     //         about: about,
+    //     //         canhelpWith: ['maths', 'Science', "Physics"],
+    //     //         studyLevel: studyLevel,
+    //     //         documents: [{
+    //     //             docUri: "pornhub.com/geda.zip"
+    //     //         }]
+
+    //     //     }
+    //     // }).then(e => res.status(200).send({ msg: "Profile updated successfully!" }))
+
+    // })
 
 
 
