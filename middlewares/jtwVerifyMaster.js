@@ -18,14 +18,13 @@ const verify=async(req,res,next)=>{
         
         req.uid =  userId._id;
         req.email =  userId.email;
-        next()
+        next();
         
-    } catch (error) {
+    }
+    catch (error) {
         res.status(500).send({msg:"Something went wrong or Invalid JWT"})
 
     }   
-
-
 
 
 

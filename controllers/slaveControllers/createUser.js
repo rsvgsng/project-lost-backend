@@ -107,12 +107,12 @@ const stepTwoSignup = AsyncHandler(async (req, res) => {
 
 
         if(!req.files) return res.status(400).send({ msg: "Please provide all the necessary documents.", code: 400 });
+        res.send("hi")
 
         if (req.files) {
             var fileStore = []; 
             console.log(req.files.file) 
                 
-
             // var form = new FormData();
 
             // form.append("file",req.files.documents.data)

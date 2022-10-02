@@ -26,6 +26,7 @@ route.post('/verify/email/w/',codeVerify)
 route.post('/signup/w',createUser.createUser);
 
 
+route.post('/signup/w/step1',slaveVerify,createUser.stepTwoSignup)
 
 
 
@@ -41,7 +42,6 @@ route.get('/verify/email/m/:hash',emailVerifyMaster)
 
 route.post('/verify/email/m/',codeVerifyMaster)
 
-route.post('/signup/m/step1',slaveVerify,createUser.stepTwoSignup)
 
 
 module.exports = route;
