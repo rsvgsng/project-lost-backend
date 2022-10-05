@@ -20,7 +20,8 @@ const MasterModel = new Schema({
         validate: [validator.isEmail, "Enter valid Email"]
     },
     wantshelpIn:[{
-        type:String
+        type:String,
+        required:true
     }],
     password: {
         type: String,

@@ -17,6 +17,7 @@ app.use("/api/v1/",taskRoute);
 app.use("/api/v1/",authRoute);
 app.use("/api/v1/",profileRoute);
 
+
 // misc
 app.all('*',(req,res)=>{res.status(500).send('Internal server error')})
 

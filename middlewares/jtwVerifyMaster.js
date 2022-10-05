@@ -23,7 +23,7 @@ const verify=async(req,res,next)=>{
     }
     catch (error) {
         res.status(500).send({msg:"Something went wrong or Invalid JWT"})
-
+        console.log(error)
     }   
 
 

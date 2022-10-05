@@ -6,7 +6,8 @@ const sendVerification = require('../../misc/mails/sendVerification')
 const { validateOptions } = require('../../helpers/validateOptions');
 const AsyncHandler = require('express-async-handler');
 const customOptions = require('../../misc/customOptions');
-
+const fs = require('fs');
+const { randomString } = require('../../misc/genRandomIDs');
 const createUser = AsyncHandler(async (req, res) => {
     try {
 
@@ -45,16 +46,16 @@ const createUser = AsyncHandler(async (req, res) => {
 
 
         await user.save(async (err) => {
+            
             if (err) {
-                res.send(err)
-                // res.status(500).send({ msg: "Something went wrong!", code: 500 })
+
+                res.status(500).send({ msg: "Something went wrong!", code: 500 })
             }
             else {
                 const { userName: userName, _id: _userId } = user;
                 const veriCode = Math.floor(100000 + Math.random() * 900000);
                 var hash = crypto.randomBytes(30).toString('hex');
                 await SlaveModel.findByIdAndUpdate(_userId, {
-                    // profilePic: userName + '_dp_.' + fileExtension ,
                     tempCode: veriCode,
                     verifyHash: hash
                 })
@@ -65,26 +66,6 @@ const createUser = AsyncHandler(async (req, res) => {
             }
         })
 
-
-        // if (req.files) {
-        //     const fileExtension = req.files.dp.mimetype.split("/")[1];
-
-
-        //     if (!req.files.dp.mimetype.startsWith('image/'))
-        //         return res.status(500).json({ message: 'Please choose an image', code: 500 });
-        //     if (req.files.dp.size >= 1000000)
-        //         return res.status(500).json({ message: 'File sized exceed 1 MB', code: 500 });
-
-        //     const file = req.files.dp
-        //     const { userName: userName, _id: _userId } = user;
-
-
-        // file.mv(`Images/${userName + '_dp_.' + fileExtension}`, async () => {
-
-        // })
-
-
-        // };
 
     } catch (error) {
 
@@ -98,70 +79,131 @@ const createUser = AsyncHandler(async (req, res) => {
 
 
 const stepTwoSignup = AsyncHandler(async (req, res) => {
+    try {
+    
 
-    const { about, canhelpWith, studyLevel, documents } = req.body;
-    if (!about, !studyLevel) return res.status(400).send({ msg: "Please fill all the necessary fields." })
-    if (!req.files) return res.status(400).send({ msg: "Please provide your documents." })
+        // Basic validations
+        if(!req.body.about) return res.send({ msg: "Please fill all the necessary fields." })
+        if(!req.body.studyLevel) return res.send({ msg: "Please fill all the necessary fields." })
+        if(!req.body.canhelpWith) return res.send({ msg: "Please fill all the necessary fields." })
+
+
+        // Profile Picture
+        if(!req.files.profile) return res.send({msg: "Profile picture is needed."})
+        if(req.files.profile.length>1) return res.send({msg: "Please upload a single Image as profile picture."})
+        if(!req.files.profile.mimetype.startsWith('image/')) return res.status(400).send({ msg: "Please provide a valid image as profile picture." }) 
+        if(req.files.profile.size >= process.env.MAX_UPLOAD) return res.status(400).send({ msg: `Max file size is ${process.env.MAX_UPLOAD/1000000} MB` })
+        if(!req.files.documents) return res.send({msg: "Please upload your documents."})
+
+
+        
+        
+    var helpWith = [];
     cateHelp = req.body.canhelpWith.split(',');
-
+    let error = false
     cateHelp.map(e => {
-        if (!customOptions.categories().includes(e.toUpperCase())) return res.status(404).send({ msg: "Invalid category" })
+        if (!customOptions.categories().includes(e.toUpperCase())) error = true
+        helpWith.push(e)  
     })
 
+    if(error)  return res.status(404).send({ msg: "Invalid choosen category!" })
 
     await SlaveModel.findById(req.uid).then(async e => {
+      
+
+        // Already filled validation
 
         if (e.veryStep == 'none') return res.status(400).send({ msg: "You have already completed this step.", code: 400 });
 
 
 
-
-        var fileStore = [];
-
-
-
-
+        //Documents upload validation 
+        var fileErrors = [];
+        var documentsArray = [];
 
         fileLength = (req.files.documents.length == undefined ? 1 : req.files.documents.length)
+        if(fileLength<process.env.MIN_FILE_UPLOAD ) return res.status(400).send({ msg: `Please provide atlest ${process.env.MIN_FILE_UPLOAD} valid documents.` })
+        if(fileLength>process.env.MAX_FILE_UPLOAD ) return res.status(400).send({ msg: `Max is ${process.env.MAX_FILE_UPLOAD} document allowed!` })
 
-        if (fileLength > 1) {
+        // creating folder for user uploads 
+        fs.mkdirSync(`files/userProfiles/${req.email}/documents`, { recursive: true });
+ 
 
+        // creating array of files and errors  
+        if (fileLength > 1 ) {
+            
             for (i = 0; i < fileLength; i++) {
-
-                console.log(req.files.documents[i].name)
+                if(!req.files.documents[i].mimetype.startsWith('image/')) fileErrors.push({msg: `${req.files.documents[i].name} is not an image` }) 
+                if(req.files.documents[i].size >= process.env.MAX_UPLOAD) fileErrors.push({msg: `${req.files.documents[i].name} size exceeded ${Math.round(process.env.MAX_UPLOAD/1024/1000)} MB.` })
 
             }
 
+            if(fileErrors.length>0) return res.status(400).send({ errors: fileErrors });
+            
+
+            for (i = 0; i < fileLength; i++) {
+                const extension = req.files.documents[i].mimetype.split("/")[1];
+                const randomName =  randomString(7)
+                req.files.documents[i].mv(`files/userProfiles/${req.email}/documents/${randomName+'.'+extension}`)
+                documentsArray.push( { docName:randomName, docExtension: extension,docSize:req.files.documents[i].size})
+
+                }
+                
         }
-        else {
-            console.log(req.files.documents.name)
-        }
+        
+        // Moving Profile Picture to folder
+
+        req.files.profile.mv(`files/userProfiles/${req.email}/${'profile.' + req.files.profile.mimetype.split("/")[1]}`)
+
+
+
+        // Updating user profile in data base finally 
+
+        await SlaveModel.findByIdAndUpdate(req.uid, {
+            $set: {
+                about: req.body.about,
+                canhelpWith: helpWith,
+                studyLevel: req.body.studyLevel,
+                documents: documentsArray,
+                veryStep:'none'
+
+            }
+        }).then(e => res.status(200).send({ msg: "Account Updated successfully ! Please wait until we check your details" }))
+
+
+
+
+
 
 
     })
 
-    //     // console.log(documents.split(","))
 
 
 
-    //     // await SlaveModel.findByIdAndUpdate(req.uid, {
-    //     //     $set: {
-    //     //         about: about,
-    //     //         canhelpWith: ['maths', 'Science', "Physics"],
-    //     //         studyLevel: studyLevel,
-    //     //         documents: [{
-    //     //             docUri: "pornhub.com/geda.zip"
-    //     //         }]
 
-    //     //     }
-    //     // }).then(e => res.status(200).send({ msg: "Profile updated successfully!" }))
+    } 
+    
+    
+    catch (error) {
+        console.log(error)
+        res.status(500).send({ msg: "Something went wrong!", code: 500 })
+    }
 
-    // })
+
+
+
+
 
 
 
 
 })
+
+
+
+
+    
 module.exports = { createUser, stepTwoSignup }
 
 

@@ -8,11 +8,12 @@ const loginUser =async(req,res)=>{
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-          return res.status(400).sendStatus(400);
+          return res.status(400).send({msg:"Provide all fields",code:400});
         }
 
         const email = req.body.email;
         const password = req.body.password;
+        
         const login = await MasterModel.find({email:email})
        if(login.length<1) return res.status(404).send({err:"No user found with that email!",success:false})
 
@@ -29,7 +30,8 @@ const loginUser =async(req,res)=>{
 
 
     } catch (error) {
-        res.status(400).send({msg:"Something went wrong the database is empty!"})
+        console.log(error)
+        res.status(400).send({msg:"Something went wrong "})
 
     }
 }

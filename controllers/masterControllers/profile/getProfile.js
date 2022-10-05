@@ -10,19 +10,17 @@ const getProfile = async (req, res) => {
 
 
 
-
-
     await Tasks.find({ email: req.email }).then(async(e) => {
        
         tasksList = await Tasks.find({ email: req.email }).select('title assignedTo taskID taskExpired maxPrice category taskViews createdOn -_id deadLine')
         res.send({
             userName: userName,
             fullName:fullName,
-            dateJoined:creationDate,
+            creationDate:creationDate,
             profilePic: profilePic,
             email: email,
             gender: gender,
-            intrested: wantshelpIn,
+            wantshelpIn: wantshelpIn,
             allTasks: tasksList.length > 0 ? tasksList : null
         })
 

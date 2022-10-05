@@ -31,4 +31,22 @@ const verify=async(req,res,next)=>{
 
 }
 
-module.exports = verify
+const verifyStep =async(req,res,next)=>{
+        
+        try {
+
+    SlaveModel.findById(req.uid).then(e=>{
+        if(e.veryStep==='step1')return res.status(500).send({msg:"You are not allowed to access this route!",code:500})
+        next()
+    })
+     
+            
+        } catch (error) {
+            res.status(500).send({msg:"Something went wrong or Invalid JWT"})
+    
+        }
+
+
+}
+
+module.exports = {verify    ,verifyStep}

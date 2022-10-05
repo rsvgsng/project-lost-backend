@@ -17,6 +17,11 @@ const codeVerifyMaster = require('../controllers/masterControllers/verifications
 const emailVerifyMaster = require('../controllers/masterControllers/verifications/emailVerify');
 
 // routes for workers
+
+
+
+// Worker auth routes
+
 route.post('/login/w',body('email').notEmpty().withMessage("Enter email"), body('password').notEmpty().withMessage("Provide your password!"),loginUser);
 
 route.get('/verify/email/w/:hash',emailVerify)
@@ -26,7 +31,14 @@ route.post('/verify/email/w/',codeVerify)
 route.post('/signup/w',createUser.createUser);
 
 
-route.post('/signup/w/step1',slaveVerify,createUser.stepTwoSignup)
+route.post('/signup/w/step1',slaveVerify.verify,slaveVerify.verifyStep,createUser.stepTwoSignup)
+
+
+
+
+
+
+
 
 
 
@@ -36,7 +48,7 @@ route.post('/signup/w/step1',slaveVerify,createUser.stepTwoSignup)
 
 route.post('/signup/m',createUserMaster);
 
-route.post('/login/m',body('email').notEmpty().withMessage("Enter email"), body('password').notEmpty().withMessage("Provide your password!"),loginUserMaster);
+route.post('/login/m',body('email').notEmpty(),body('password').notEmpty(),loginUserMaster);
 
 route.get('/verify/email/m/:hash',emailVerifyMaster)
 

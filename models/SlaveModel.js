@@ -106,7 +106,10 @@ const SlaveModel = new Schema({
 
         documents: [
             {
-                docUri: String
+                docName: String,
+                docExtension: String,
+                docSize: Number,
+                
             }
         ]
 
