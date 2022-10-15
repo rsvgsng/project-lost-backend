@@ -9,11 +9,8 @@ const { categories } = require('../../misc/customOptions');
 
 const createUser = async (req, res) => {
     try {
-
         const valid = validateOptions(req.body.gender, req.body.password, req.body.location)
-
-        if (!valid) return res.status(500).send({ err: "Something is not right!" });
-
+        if (!valid) return res.status(500).send({ msg:"Something went wrong!" });
         // User object
         const user = await new MasterModel({
             fullName: req.body.fullName,
@@ -21,23 +18,26 @@ const createUser = async (req, res) => {
             userName: req.body.userName,
             gender: req.body.gender,
             studyLevel: req.body.studyLevel,
-            dob: req.body.dob,
             location: req.body.location,
             password: bcrypt.hashSync(req.body.password, 10),
 
         })
+            
+        
         const helpWith = [];
-
-        helpCat = req.body.wantshelpIn.split(',')
         var error = false;
 
-        helpCat.map(e => {
+        const helpCat = req.body.wantshelpIn;
+            console.log(helpCat)
+        helpCat?.map(e => {
             if (!categories().includes(e.toUpperCase())) error = true
+            console.log(e)
             helpWith.push(e)
         })
 
-
-        if (error) return res.status(500).send({ err: "Invalid Category!" })
+        if (error) return res.status(500).send({ msg: "Invalid Subject Category!" })
+        // Checking Length of Names
+        if (user.fullName.length < 3) return res.status(500).send({ msg: "Full Name is too short!" })
 
         // Checking existing email
         const email = await MasterModel.find({ email: req.body.email })
@@ -46,11 +46,11 @@ const createUser = async (req, res) => {
         const userUserName = await SlaveModel.find({ userName: req.body.userName })
         const userNames = await MasterModel.find({ userName: req.body.userName })
 
-        if (userSlaveEmail.length > 0) return res.status(401).send({ msg: "Email already taken", code: 401 })
+        if (userSlaveEmail.length > 0) return res.status(500).send({ msg: "Email already taken", code: 500 })
         if (userUserName.length > 0) return res.status(500).send({ msg: "Username is already taken", code: 500 });
 
 
-        if (!email.length < 1) return res.status(401).send({ msg: "Email already exists", code: 401 });
+        if (!email.length < 1) return res.status(401).send({ msg: "Email already taken", code: 401 });
 
         if (!userNames.length < 1) return res.status(500).send({ msg: "Username already exists", code: 500 });
         const { _id: _userId } = user;
@@ -68,15 +68,15 @@ const createUser = async (req, res) => {
                     await MasterModel.findByIdAndUpdate(_userId, {
                         tempCode: veriCode,
                         verifyHash: hash,
-                        wantshelpIn: helpWith
+                        wantshelpIn: req.body.wantshelpIn
                     })
-                    sendVerification(req.body.email, veriCode, hash, _userId, 'm')
-                    res.status(200).send({ msg: "Your should receive a Email with your activation code and a link shortly." })
+                  sendVerification(req.body.email, veriCode, hash, _userId, 'm')
+                   return res.status(200).send({ msg: "A link with verification has been sent to your email addderss.", code: 200 })
                 }
-            } 
+            }
             catch (error) {
                 res.status(500).send({ msg: "Something went wrong!", code: 500 })
-                
+
             }
         })
 

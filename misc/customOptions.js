@@ -3,10 +3,10 @@ return ['WORKER','MASTER'];
 }
 
 const gendertypeOptions=()=>{
-return ['MALE','FEMALE','OTHER'];
+return ['MALE','FEMALE','OTHERS'];
 }
 const passwordLength=(password)=>{
-    return(password.length>8)
+    return(password.length>=8)
 }
 const countriesList=()=>{
 
@@ -16,7 +16,7 @@ const countriesList=()=>{
 const categories = ()=>{
 
     return [
-    'OTHERS','HISTORY',"ELECTRONICS","ACCOUNTS","PROGRAMMING",
+    'OTHERS','HISTORY',"ENGLISH","ELECTRONICS","ACCOUNTS","PROGRAMMING",
     "ECONOMICS","PHYSICS","MATHS","COMPUTER SCIENCE","ASTRONOMY",
      ];
 

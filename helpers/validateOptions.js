@@ -2,10 +2,12 @@ const {gendertypeOptions,passwordLength,countriesList} = require('../misc/custom
 
 
 const validateOptions=(gender,password,country)=>{
+    
     var flag =
     gendertypeOptions().includes(gender.toUpperCase()) &&  
     passwordLength(password)&&
     countriesList().includes(country.toUpperCase())
+    
     return flag;
 }
 

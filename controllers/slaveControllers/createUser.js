@@ -12,7 +12,7 @@ const createUser = AsyncHandler(async (req, res) => {
     try {
 
         const valid = validateOptions(req.body.gender, req.body.password, req.body.location)
-        if (!valid) return res.status(500).send({ err: "Something is not right!" });
+        if (!valid) return res.status(500).send({ msg: "Something is not right!" });
 
         // User object
 
@@ -27,27 +27,26 @@ const createUser = AsyncHandler(async (req, res) => {
         })
 
         // Basic validations
+        if(req.body.fullName.length < 3) return res.status(500).send({ msg: "Full name is too short!" });
         const email = await SlaveModel.find({ email: req.body.email })
         const userMasterEmail = await MasterModel.find({ email: req.body.email })
 
         const masterUsername = await MasterModel.find({ userName: req.body.userName })
         const userName = await SlaveModel.find({ userName: req.body.userName })
         console.log(userMasterEmail)
-        if (userMasterEmail.length > 0) return res.status(401).send({ msg: "Email already exists", code: 401 })
+        if (userMasterEmail.length > 0) return res.status(500).send({ msg: "Email already exists", code: 500 })
         if (masterUsername.length > 0) return res.status(500).send({ msg: "Username is already taken", code: 500 });
 
 
-        if (!email.length < 1) return res.status(401).send({ msg: "Email already exists", code: 401 });
+        if (!email.length < 1) return res.status(500).send({ msg: "Email already exists", code:500 });
         if (!userName.length < 1) return res.status(500).send({ msg: "Username already exists", code: 500 });
-
-
-        // if (!req.files) return res.status(500).send({ msg: "Please provide a Profile Picture", code: 500 })
 
 
 
         await user.save(async (err) => {
             
             if (err) {
+                console.log(err )
 
                 res.status(500).send({ msg: "Something went wrong!", code: 500 })
             }
@@ -60,15 +59,15 @@ const createUser = AsyncHandler(async (req, res) => {
                     verifyHash: hash
                 })
 
-                sendVerification('ghisingrishav@gmail.com', veriCode, hash, _userId, 's')
+             await   sendVerification('ghisingrishav@gmail.com', veriCode, hash, _userId, 's')
                 console.log(`http://localhost:8000/api/v1/verify/email/${'w'}/${hash}&${_userId}`)
-                res.status(200).send({ msg: "Verification code send. Please check your mail ! It might take couple of minutes to reach to you!" })
+                SlaveModel.findOneAndDelete({ _id: _userId })
+                res.status(200).send({ msg: "Verification code send. Please check your mail ! It might take couple of minutes to reach to you!",code:200 })
             }
         })
 
 
     } catch (error) {
-
         res.status(500).send({ msg: "Something went wrong!", code: 500 })
     }
 

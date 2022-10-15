@@ -48,5 +48,11 @@ const verifyStep =async(req,res,next)=>{
 
 
 }
-
-module.exports = {verify    ,verifyStep}
+const verifySlaveByAdmin =async(req,res,next)=>{
+    SlaveModel.findById(req.uid).then(e=>{
+        console.log(e.adminVerified);
+        // if(e.adminVerified!==true)return res.status(500).send({msg:"You are not allowed to access this route!",code:500})
+        // next()
+    })
+}
+module.exports = {verify ,verifyStep,verifySlaveByAdmin}

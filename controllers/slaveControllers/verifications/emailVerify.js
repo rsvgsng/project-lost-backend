@@ -23,7 +23,7 @@ const emailVerify = async (req, res) => {
             veryStep:"second"
          })
 
-         res.send({msg:"Account verified successfully!",step:"second",token:jwt.sign({id:userID},process.env.JWTKEY)})
+         res.redirect('http://localhost:3000/login/expert?success=true')
 
     }
     catch (error) {

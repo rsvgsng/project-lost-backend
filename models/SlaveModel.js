@@ -38,6 +38,10 @@ const SlaveModel = new Schema({
         type: Number,
         default: 0
     },
+    adminVerified:{
+            type:Boolean,
+            default:false
+    },
     gender: {
         type: String,
         required: true

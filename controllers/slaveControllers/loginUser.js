@@ -19,7 +19,7 @@ const loginUser =async(req,res)=>{
         if(!logincheck) return res.send({msg:"Email or password wrong"})
         
         res.send({msg:"Login Successful!",success:true,token:jwt.sign({id:d[0]._id},process.env.JWTKEY)})
-
+        
 
     } catch (error) {
         console.log(error)

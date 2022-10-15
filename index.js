@@ -18,8 +18,9 @@ app.use("/api/v1/",authRoute);
 app.use("/api/v1/",profileRoute);
 
 
+
 // misc
-app.all('*',(req,res)=>{res.status(500).send('Internal server error')})
+app.all('*',(req,res)=>{res.status(500).send('o hey there! Nice to meet you. This is not the page you are looking for!')})
 
 // database connection
 mongoose.connect(process.env.MONGODBURI, { useNewUrlParser: true, useUnifiedTopology: true })
