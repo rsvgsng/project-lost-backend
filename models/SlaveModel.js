@@ -38,29 +38,32 @@ const SlaveModel = new Schema({
         type: Number,
         default: 0
     },
-    adminVerified:{
-            type:Boolean,
-            default:false
+    adminVerified: {
+        type: Boolean,
+        default: false
     },
     gender: {
         type: String,
         required: true
     },
-    veryStep:{
-        type:String,
-        default:"first"
-    
+    documentSubmitted: {
+        type: Boolean,
+        default: false
+
     },
     dob: {
         type: Date
 
     },
-    about:{
-        type:String
-        },
-    balance:{
-        type:Number,
-        default:0
+    about: {
+        type: String
+    },
+    howHelp: {
+        type: String
+    },
+    balance: {
+        type: Number,
+        default: 0
     },
     creationDate: {
         type: Date,
@@ -92,30 +95,27 @@ const SlaveModel = new Schema({
         type: String
     },
     studyLevel: {
-     
+
         type: String
     },
-    emailVerified:{
-        type:Boolean,
-        default:false
+    emailVerified: {
+        type: Boolean,
+        default: false
     }
     ,
-    verifyHash:{
-        type:String,
-        default:null
-    },
-    tempCode:{
-        code :Number
-    },
+    verifyHash: {
+        type: String,
+        default: null
+    }, 
 
-        documents: [
-            {
-                docName: String,
-                docExtension: String,
-                docSize: Number,
-                
-            }
-        ]
+    documents: [
+        {
+            docName: String,
+            docExtension: String,
+            docSize: Number,
+
+        }
+    ]
 
 
 

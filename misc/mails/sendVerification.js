@@ -1,7 +1,7 @@
 const transporter = require('./mailConnect')
 
 
-async function sendVerification (to,code,link,userID,cat) {
+async function sendVerification (to,link,userID,cat) {
     try {
         a = await   transporter.sendMail({
             from: 'confessn@confess24.com', // sender address

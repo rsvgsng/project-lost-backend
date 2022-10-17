@@ -56,9 +56,7 @@ const MasterModel = new Schema({
         type:String,
         default:null
     },
-    tempCode:{
-        code :Number
-    },
+
 
 })
 

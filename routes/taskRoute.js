@@ -1,6 +1,6 @@
 const route = require('express').Router()
 const taskControllers = require('../controllers/masterControllers/tasks/taskControllers')
-const verify = require('../middlewares/jtwVerifyMaster')
+const verify = require('../middlewares/MasterMiddleWare')
 
 
 
