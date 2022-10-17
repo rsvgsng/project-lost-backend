@@ -14,6 +14,11 @@ const publicInfo = new Schema({
         type:Array,
         default:[]
 
+    },
+    educations:{
+        type:Array,
+        default:[]
+        
     }
 
 

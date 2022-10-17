@@ -72,7 +72,7 @@ const createUser = AsyncHandler(async (req, res) => {
              await   sendVerification('ghisingrishav@gmail.com', veriCode, hash, _userId, 's')
                 console.log(`http://localhost:8000/api/v1/verify/email/${'w'}/${hash}&${_userId}`)
                 SlaveModel.findOneAndDelete({ _id: _userId })
-                res.status(200).send({code:200 })
+                res.status(200).send({code:200  })
             }
         })
 

@@ -35,10 +35,6 @@ route.get('/dashboard',verifyJWT,verifyDocs,dashboard)
 
 
 
-
-
-
-
 // routes for masters
 
 route.post('/signup/m',createUserMaster);
