@@ -22,7 +22,6 @@ const getpublicTaskNumber = async (req, res) => {
                                 res.send({ error: 'Invalid action' })
                 }
 
-
         }   
         catch (error) {
                 res.status(400).send({ msg: "Something went wrong",code:400 })

@@ -11,7 +11,7 @@ async function sendVerification (to,link,userID,cat) {
             html: `<b>The code to activate your account is ${code}</b> \n Use this link to verify account directly. <a href ="http://localhost:8000/api/v1/verify/email/${cat}/${link}&${userID}" >Link</a>`,
         })
         
-        console.log(a)    
+   
         if(a.messageId !== undefined) return  {msg:`Mail successfull sent to ${to} hash = ${link}`}
         if(a.messageId == undefined) return  {msg:`Failed`}
         

@@ -24,7 +24,7 @@ const verifyJWT=async(req,res,next)=>{
     try {
 
         const headerToken = req.headers['x-access-token'] || req.headers.authorization.split(' ')[1];
-        console.log(headerToken)
+   
         if(!headerToken)return res.send({msg:"No access token present on the header! "});
         const {id} = (jwt.verify(headerToken,process.env.JWTKEY))
         const userId = await SlaveModel.findById({_id:id});
@@ -56,7 +56,7 @@ const hasDocumentsSubmitted =async(req,res,next)=>{
 const verifyDocs =async(req,res,next)=>{
         try {
     SlaveModel.findById(req.uid).then(e=>{
-            console.log(e.documentSubmitted)
+           
         if(e.documentSubmitted===false)return res.status(400).send({msg:"Please submit documents to continue further!",code:400})
         if(e.adminVerified===false)return res.status(403).send({msg:"Your documents are under review!",code:403})
         next()

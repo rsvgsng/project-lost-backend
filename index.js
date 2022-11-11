@@ -18,7 +18,7 @@ app.use("/api/v1/",authRoute);
 app.use("/api/v1/",profileRoute);
 
 app.post('/upload',(req,res)=>{
-    console.log("Load")
+
     if(req.files){
      res.send(req.files)
 
@@ -26,6 +26,7 @@ app.post('/upload',(req,res)=>{
 
 
 })
+
 
 // misc
 app.all('*',(req,res)=>{res.status(500).send('o hey there! Nice to meet you. This is not the page you are looking for!')})
