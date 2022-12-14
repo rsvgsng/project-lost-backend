@@ -5,6 +5,7 @@ const emailVerify = async (req, res) => {
     const hashToken = hash[0]
     const userID = hash[1]
 
+// condo is best 
 
     try {
 
